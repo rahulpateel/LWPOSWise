@@ -156,7 +156,7 @@
                                         <?php if ($product->alert_quantity != 0) { ?>
                                             <tr>
                                                 <td><?= lang("alert_quantity"); ?></td>
-                                                <td><?php echo $this->sma->formatQuantity($product->alert_quantity); ?></td>
+                                                <td><?php echo ($product->alert_quantity); ?></td>
                                             </tr>
                                         <?php } ?>
                                         <?php if ($variants) { ?>
@@ -227,7 +227,7 @@
                                                     <tbody>
                                                     <?php foreach ($warehouses as $warehouse) {
                                                         if ($warehouse->quantity != 0) {
-                                                            echo '<tr><td>' . $warehouse->name . ' (' . $warehouse->code . ')</td><td><strong>' . $this->sma->formatQuantity($warehouse->quantity) . '</strong>' . ($warehouse->rack ? ' (' . $warehouse->rack . ')' : '') . '</td></tr>';
+                                                            echo '<tr><td>' . $warehouse->name . ' (' . $warehouse->code . ')</td><td><strong>' . ($warehouse->quantity) . '</strong>' . ($warehouse->rack ? ' (' . $warehouse->rack . ')' : '') . '</td></tr>';
                                                         }
                                                     } ?>
                                                     </tbody>
@@ -249,7 +249,7 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php foreach ($combo_items as $combo_item) {
-                                                        echo '<tr><td>' . $combo_item->name . ' (' . $combo_item->code . ') </td><td>' . $this->sma->formatQuantity($combo_item->qty) . '</td></tr>';
+                                                        echo '<tr><td>' . $combo_item->name . ' (' . $combo_item->code . ') </td><td>' .($combo_item->qty) . '</td></tr>';
                                                     } ?>
                                                     </tbody>
                                                 </table>
@@ -275,7 +275,7 @@
                                                     <?php
                                                     foreach ($options as $option) {
                                                         if ($option->wh_qty != 0) {
-                                                            echo '<tr><td>' . $option->wh_name . '</td><td>' . $option->name . '</td><td class="text-center">' . $this->sma->formatQuantity($option->wh_qty) . '</td>';
+                                                            echo '<tr><td>' . $option->wh_name . '</td><td>' . $option->name . '</td><td class="text-center">' . ($option->wh_qty) . '</td>';
                                                             if ($Owner || $Admin && (!$Customer || $this->session->userdata('show_cost'))) {
                                                                 echo '<td class="text-right">' . $this->sma->formatMoney($option->cost) . '</td><td class="text-right">' . $this->sma->formatMoney($option->price) . '</td>';
                                                             }

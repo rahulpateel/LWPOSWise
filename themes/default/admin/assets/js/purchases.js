@@ -886,7 +886,7 @@ function loadItems(cnt='') {
             if(page.indexOf('edit_purchase_order') > -1)
             {
                 tr_html += '<td class="text-right"><input class="form-control input-sm text-right rcost" style="width: 70px;" name="net_cost[]" type="hidden" id="cost_' + row_no + '" value="' + item_cost + '"><input style="width: 70px;" class="form-control text-center rucost" name="unit_cost[]" type="hidden" tabindex="'+((site.settings.set_focus == 1) ? an : (an+1))+'" value="' + unit_cost + '" data-id="' + row_no + '" data-item="' + item_id + '" id="rucost_' + row_no + '" onClick="this.select();"><input class="realucost" name="real_unit_cost[]" type="hidden" value="' + item.row.real_unit_cost + '"><span class="text-right sreal_unit_cost" id="sreal_unit_cost' + row_no + '">' +formatMoney(unit_cost)+ '</span></td>';
-                tr_html += '<td class="text-right"><span class="text-right" id="stock_' + row_no + '">' +noRoundQty(stock)+ '</span></td>';
+                tr_html += '<td class="text-right"><span class="text-right" id="stock_' + row_no + '">' +(stock)+ '</span></td>';
                 tr_html += '<td class="text-right"><span class="text-right" id="alert_quantity_' + row_no + '">' +noRoundQty(alert_quantity)+ '</span></td>';
                 tr_html += '<td class="text-right"><input name="quantity_balance[]" type="hidden" class="rbqty" value="' + item_bqty + '"><input class="form-control text-center rquantity" name="quantity[]" type="hidden" tabindex="'+((site.settings.set_focus == 1) ? an : (an+1))+'" value="' + noRoundQty(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onClick="this.select();"><input name="product_unit[]" type="hidden" class="runit" value="' + product_unit + '"><input name="product_base_quantity[]" type="hidden" class="rbase_quantity" value="' + base_quantity + '"><span class="text-right squantity" id="squantity' + row_no + '">' +noRoundQty(item_qty)+ '</span></td>';
             }
@@ -896,7 +896,7 @@ function loadItems(cnt='') {
                
                 tr_html += '<td class="text-right"><span class="text-right" id="price_' + row_no + '">' +formatDecimal(item.row.price)+ '</span></td>';
                
-                tr_html += '<td class="text-right"><span class="text-right" id="stock_' + row_no + '">' +noRoundQty(stock)+ '</span></td>';
+                tr_html += '<td class="text-right"><span class="text-right" id="stock_' + row_no + '">' +(stock)+ '</span></td>';
                 tr_html += '<td class="text-right"><input class="form-control text-center alert_quantity" name="alert_quantity[]" type="text" tabindex="'+((site.settings.set_focus == 1) ? an : (an+1))+'" value="' + noRoundQty(alert_quantity) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="alert_quantity_' + row_no + '" onClick="this.select();"></td>'
                 tr_html += '<td><input name="quantity_balance[]" type="hidden" class="rbqty" value="' + item_bqty + '"><input class="form-control text-center rquantity" name="quantity[]" type="text" tabindex="'+((site.settings.set_focus == 1) ? an : (an+1))+'" value="' + noRoundQty(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onClick="this.select();"><input name="product_unit[]" type="hidden" class="runit" value="' + product_unit + '"><input name="product_base_quantity[]" type="hidden" class="rbase_quantity" value="' + base_quantity + '"></td>';
             }
