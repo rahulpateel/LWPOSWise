@@ -1,0 +1,440 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<link rel="stylesheet" type="text/css" media="screen" href="<?= $assets ?>styles/jquery-ui.min.css">
+<script type="text/javascript" src="<?= $assets ?>js/jquery-ui.min_new.js"></script>
+<script type="text/javascript" src="<?= $assets ?>js/jquery.validate.min.js"></script>
+
+<?php
+$params="";
+if ($this->input->post('category')) {
+    //echo "nocategory_id ".$this->input->post('category');
+    $params.="&category_id=".$this->input->post('category');
+}
+
+if ($this->input->post('subcategory')) {
+    //echo "subcategory_id ".$this->input->post('subcategory');
+    $params.="&subcategory_id=".$this->input->post('subcategory');
+}
+
+if ($this->input->post('status')) {
+    //echo "#status ".$this->input->post('status');
+     $params.="&status=".$this->input->post('status');
+}
+
+if ($this->input->post('user')) {
+    //echo "user ".$this->input->post('user');
+     $params.="&user=".$this->input->post('user');
+}
+
+
+if ($this->input->post('for_month')) {
+    //echo "for_month ".$this->input->post('for_month');
+    $params.="&for_month=".$this->input->post('for_month');
+}
+
+?>
+
+<script>
+
+    <?php
+
+    $url='stocktake/getStockTakesTaken';
+
+    if(!empty($params))
+    {
+        $url='stocktake/getStockTakesTaken?'.$params;        
+    }
+    ?>
+    $(document).ready(function () {
+        oTable = $('#QUData').dataTable({
+          //  "aaSorting": [[1, "desc"], [2, "desc"]],
+            "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
+            "iDisplayLength": <?= $Settings->rows_per_page ?>,
+            'bProcessing': true, 'bServerSide': true,
+            'sAjaxSource': '<?= admin_url($url) ?>',
+            'fnServerData': function (sSource, aoData, fnCallback) {
+                aoData.push({
+                    "name": "<?= $this->security->get_csrf_token_name() ?>",
+                    "value": "<?= $this->security->get_csrf_hash() ?>"
+                });
+                $.ajax({'dataType': 'json', 'type': 'POST', 'url': sSource, 'data': aoData, 'success': fnCallback});
+            },
+            'fnRowCallback': function (nRow, aData, iDisplayIndex) {
+                /*var oSettings = oTable.fnSettings();
+                nRow.id = aData[0];
+                nRow.className = "quote_link";
+                return nRow;*/
+            },
+            "aoColumns": [{"bSortable": false,"mRender": checkbox},null,null, null, null, null,null,null, null,
+
+            {mRender: function (data, type, row) {
+                if(row[12]=='Greater')
+                {
+                    return row[9]+"<br/><div class='text-center'><span class='row_status label label-error' style='background-color:green'>Excess</span></div>";
+                }
+                else if(row[12]=='Lesser')
+                {
+                    return row[9]+"<div class='text-center'><span class='row_status label label-error' style='background-color:red'>Short</span></div>";
+                }
+                else
+                {
+                    return "<div class='text-center'>"+row[9]+"</div>";
+                }
+
+            }}
+            ,null,{mRender: function (data, type, row) {
+                if((row[11]=='0') && row[9]=='Mismatched')
+
+                        
+                      return "<div class='text-center'><div class='btn-group text-left'><button type='button' class='btn btn-default btn-xs btn-primary dropdown-toggle' data-toggle='dropdown'>Actions <span class='caret'></span></button><ul class='dropdown-menu pull-right' role='menu'><li><a href='<?= admin_url('stocktake/approve') ?>/"+row[0]+"' data-toggle='modal' data-target='#myModal' ><i class='fa fa-edit'></i>Approve Stocktake</a></li><li><a href='<?= admin_url('stocktake/delete') ?>/"+row[0]+"'><i class='fa fa-edit'></i>Delete Stocktake</a></li></ul></div></div>";
+
+                  else
+                    return "<div class='text-center'><div class='btn-group text-left'><button type='button' class='btn btn-default btn-xs btn-primary dropdown-toggle' data-toggle='dropdown'>Actions <span class='caret'></span></button><ul class='dropdown-menu pull-right' role='menu'><li><a href='<?= admin_url('stocktake/delete') ?>/"+row[0]+"'><i class='fa fa-edit'></i>Delete Stocktake</a></li></ul></div></div>";
+            }}]
+        }).fnSetFilteringDelay().dtFilter([
+            {column_number: 1, filter_default_label: "[<?=lang('month');?>]", filter_type: "text", data: []},
+            {column_number: 2, filter_default_label: "[<?=lang('product');?>]", filter_type: "text", data: []},
+            {column_number: 3, filter_default_label: "[<?=lang('code');?>]", filter_type: "text", data: []},
+            {column_number: 4, filter_default_label: "[<?=lang('category');?>]", filter_type: "text", data: []},
+            {column_number: 5, filter_default_label: "[<?=lang('subcategory');?>]", filter_type: "text", data: []},
+            {column_number: 6, filter_default_label: "[<?=lang('pos qty');?>]", filter_type: "text", data: []},
+          
+            {column_number: 7, filter_default_label: "[<?=lang('store qty');?>]", filter_type: "text", data: []} ,
+            {column_number: 8, filter_default_label: "[<?=lang('diff.');?>]", filter_type: "text", data: []} ,
+             {column_number: 9, filter_default_label: "[<?=lang('status');?>]", filter_type: "text", data: []} 
+             ,
+             {column_number: 10, filter_default_label: "[<?=lang('Assigned To');?>]", filter_type: "text", data: []}, 
+             {column_number: 11, filter_default_label: "[<?=lang('Action');?>]", filter_type: "text", data: []} 
+
+                      
+        ], "footer");
+
+
+
+             $(document).on('click','#delete',function() {
+        //Do stuff when clicked
+console.log("sss");
+var vals="";
+
+var len=$('input.checkbox:checkbox:checked').length;
+
+console.log("len "+len);
+
+          if(len==0)
+          {
+            alert('Please select atleast one record');
+            return;
+          }
+          else
+          {
+            var cnt=0;
+            $('input.checkbox:checkbox:checked').each(function () {
+                cnt++;
+            var sThisVal = $(this).val();
+            if(sThisVal=='on'|| sThisVal=='On' || sThisVal=='ON' || sThisVal=='oN' )
+            {
+
+            }
+            else
+            {
+                 vals+=sThisVal+",";
+                 $("#val").val(vals);
+            }
+          
+            if(cnt==len)
+            {
+                $( "#frmActions" ).submit();
+            }
+           });
+
+          }
+        //  
+    });
+
+
+         $('#for_month').datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'MM-yy',
+            onClose: function(dateText, inst) { 
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+            }).focus(function () {
+    $(".ui-datepicker-calendar").hide();
+    $(".ui-datepicker-current").hide();
+    $("#ui-datepicker-div").position({
+      my: "left top",
+      at: "left bottom",
+      of: $(this)
+    })});
+
+                    $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('select_category_to_load') ?>").select2({
+            placeholder: "<?= lang('select_category_to_load') ?>", minimumResultsForSearch: 7, data: [
+                {id: '', text: '<?= lang('select_category_to_load') ?>'}
+            ]
+        });
+
+         $('#category').change(function () {
+            var v = $(this).val();
+            $('#modal-loading').show();
+            if (v) {
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: "<?= admin_url('products/getSubCategories') ?>/" + v,
+                    dataType: "json",
+                    success: function (scdata) {
+                        if (scdata != null) {
+                            scdata.push({id: '', text: '<?= lang('select_subcategory') ?>'});
+                            $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('select_subcategory') ?>").select2({
+                                placeholder: "<?= lang('select_category_to_load') ?>",
+                                minimumResultsForSearch: 7,
+                                data: scdata
+                            });
+                        } else {
+                            $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('no_subcategory') ?>").select2({
+                                placeholder: "<?= lang('no_subcategory') ?>",
+                                minimumResultsForSearch: 7,
+                                data: [{id: '', text: '<?= lang('no_subcategory') ?>'}]
+                            });
+                        }
+                    },
+                    error: function () {
+                        bootbox.alert('<?= lang('ajax_error') ?>');
+                        $('#modal-loading').hide();
+                    }
+                });
+            } else {
+                $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('select_category_to_load') ?>").select2({
+                    placeholder: "<?= lang('select_category_to_load') ?>",
+                    minimumResultsForSearch: 7,
+                    data: [{id: '', text: '<?= lang('select_category_to_load') ?>'}]
+                });
+            }
+            $('#modal-loading').hide();
+        });
+
+
+         <?php if($this->input->post('category'))
+         {?>
+
+          $.ajax({
+            type: "get", async: false,
+            url: "<?= admin_url('products/getSubCategories') ?>/" + <?= $this->input->post('category') ?>,
+            dataType: "json",
+            success: function (scdata) {
+                if (scdata != null) {
+                     scdata.push({id: '', text: '<?= lang('select_subcategory') ?>'});
+                    $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('select_subcategory') ?>").select2({
+                        placeholder: "<?= lang('select_category_to_load') ?>",
+                        data: scdata
+                    });
+                } else {
+                    $("#subcategory").select2("destroy").empty().attr("placeholder", "<?= lang('no_subcategory') ?>").select2({
+                        placeholder: "<?= lang('no_subcategory') ?>",
+                        data: [{id: '', text: '<?= lang('no_subcategory') ?>'}]
+                    });
+                }
+            }
+        });
+      <?php } ?>
+        
+    });
+
+</script>
+
+
+<div class="box">
+    <div class="box-header">
+        <h2 class="blue"><i
+                class="fa-fw fa fa-heart-o"></i><?= lang('Stock_Take_Completed_List') ; ?>
+        </h2>
+
+        <div class="box-icon">
+            <ul class="btn-tasks">
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon fa fa-tasks tip" data-placement="left" title="<?= lang("actions") ?>"></i></a>
+                    <ul class="dropdown-menu pull-right" class="tasks-menus" role="menu" aria-labelledby="dLabel">
+                        <li>
+                            <a href="<?= admin_url('stocktake/add_stocktake') ?>">
+                                <i class="fa fa-plus-circle"></i> <?= lang('Assign_Stock_Take') ?>
+                            </a>
+                        </li>
+                        
+                        
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"  class="bpo" title="<b><?= $this->lang->line("delete_assigned_stock_take") ?></b>" 
+                                data-content="<p><?= lang('r_u_sure') ?></p><button type='button' class='btn btn-danger'  id='delete' data-action='delete'><?= lang('i_m_sure') ?></a> <button class='btn bpo-close'><?= lang('no') ?></button>" 
+                                data-html="true" data-placement="left"><i class="fa fa-trash-o"></i> <?= lang('delete_stock_takes') ?>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <?php if (!empty($warehouses)) { ?>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon fa fa-building-o tip" data-placement="left" title="<?= lang("warehouses") ?>"></i></a>
+                        <ul class="dropdown-menu pull-right" class="tasks-menus" role="menu" aria-labelledby="dLabel">
+                            <li><a href="<?= admin_url('quotes') ?>"><i class="fa fa-building-o"></i> <?= lang('all_warehouses') ?></a></li>
+                            <li class="divider"></li>
+                            <?php
+                            foreach ($warehouses as $warehouse) {
+                                echo '<li><a href="' . admin_url('quotes/' . $warehouse->id) . '"><i class="fa fa-building"></i>' . $warehouse->name . '</a></li>';
+                            }
+                            ?>
+                        </ul>
+                    </li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+    <div class="box-content">
+
+         
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <p class="introtext"><?= lang('list_results'); ?></p>
+
+                 <div class="row">
+
+                     <div id="form">
+
+                    <?php 
+                     $attrib = array('role' => 'form','id'=>'stocktakeFrm');
+                    echo admin_form_open("stocktake/stocktakestaken", $attrib); ?>
+            <div class="col-lg-12">
+                <div class="col-sm-2">
+                <div class="form-group">
+                        <?= lang("category", "category") ?>
+                        <?php
+                        $cat[''] = "";
+                        if(!empty($categories))
+                        foreach ($categories as $category) {
+                            $cat[$category->id] = $category->name;
+                        }
+                        echo form_dropdown('category', $cat, (isset($_POST['category']) ? $_POST['category'] : (!empty($stocktake)? $stocktake->category_id:'')), 'class="form-control select" id="category" placeholder="' . lang("select") . " " . lang("category") . '"  style="width:100%"')
+                        ?>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                 <div class="form-group">
+                        <?= lang("Subcategory", "subcategory") ?>
+                        <div class="controls" id="subcat_data"> <?php
+                            echo form_input('subcategory',(isset($_POST['subcategory']) ? $_POST['subcategory'] : (!empty($stocktake)? $stocktake->subcategory_id:'')), 'class="form-control" id="subcategory"  placeholder="' . lang("select_category_to_load") . '"');
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                 <div class="form-group">
+                        <?= lang("User", "user") ?>
+                        <?php
+                        $u[''] = "";
+                        if(!empty($users))
+                        foreach ($users as $user) {
+                            $u[$user->id] = $user->username;
+                        }
+                        echo form_dropdown('user', $u, (isset($_POST['user']) ? $_POST['user'] : (!empty($stocktake) ? $stocktake->user_id:'')), 'class="form-control select" id="user" placeholder="' . lang("select") . " " . lang("user") . '"  style="width:100%"')
+                        ?>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                 <div class="form-group">
+                        <?= lang("Status", "status") ?>
+                        <?php
+                        $u[''] = "";
+                        //if(!empty($statuses))
+                       
+                        echo form_dropdown('status', $statuses, (isset($_POST['status']) ? $_POST['status']:'' ), 'class="form-control select" id="status" placeholder="' . lang("select") . " " . lang("status") . '"  style="width:100%"')
+                        ?>
+                    </div>
+                </div>
+
+
+         <div class="col-sm-2">
+        <div class="form-group all">
+                                    <?= lang("Month-Year", "for_month"); ?>
+                                    <?php echo form_input('for_month', (isset($_POST['for_month']) ? $_POST['for_month'] : (!empty($stocktake) ? $stocktake->for_month:'')), 'class="form-control" id="for_month"  readonly="readonly"'); ?>
+                                </div>
+                            </div>
+
+                             <div class="col-sm-1">
+                            <div class="form-group">
+                                <?php echo form_submit('submit_report', $this->lang->line("submit"), 'class="btn btn-primary" style="margin-top:30px;"'); ?>
+                            </div>
+                        </div>
+                         <?php echo form_close(); ?>
+                        <?php 
+                     $attrib = array('role' => 'form','id'=>'stocktakeFrmReset');
+                    echo admin_form_open("stocktake/stocktakestaken", $attrib); ?>
+                     <div class="col-sm-1">
+                            <div class="form-group">
+                                <?php echo form_submit('submit_report', $this->lang->line("reset"), 'class="btn btn-primary" style="margin-top:30px;"'); ?>
+                            </div>
+                        </div>
+                    <?php echo form_close(); ?>
+                        </div>
+                    </div>
+                   
+                    </div>
+
+                <div class="table-responsive">
+                    <table id="QUData" class="table table-bordered table-hover table-striped">
+                        <thead>
+                        <tr class="active">
+                            <th style="min-width:30px; width: 30px; text-align: center;">
+                                <input class="checkbox checkft" type="checkbox" name="check"/>
+                            </th>
+                            <th><?= lang("month"); ?></th>
+                            <th><?= lang("product"); ?></th>
+                            <th><?= lang("code"); ?></th>
+                            <th><?= lang("category"); ?></th>
+                            <th><?= lang("Subcategory"); ?></th>
+                             <th><?= lang("POS Qty"); ?></th>
+                              <th><?= lang("Store Qty"); ?></th>
+                              <th><?= lang("Diff."); ?></th>
+                              <th><?= lang("Status"); ?></th>
+                            <th><?= lang("Assigned_To"); ?></th>
+                             <th style="width:115px; text-align:center;"><?= lang("actions"); ?></th>
+                            
+                           
+                          
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="10"
+                                class="dataTables_empty"><?= lang("loading_data"); ?></td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="dtFilter">
+                        <tr class="active">
+                            <th style="min-width:30px; width: 30px; text-align: center;">
+                                <input class="checkbox checkft" type="checkbox" name="check"/>
+                            </th>
+                            <th></th> <th></th> <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                           
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if ($Owner || $GP['bulk_actions']) { ?>
+    <?php 
+                     $attrib = array('role' => 'form','id'=>'frmActions');
+                    echo admin_form_open("stocktake/stocktake_item_actions", $attrib); ?>
+    <div style="display: none;">
+        <input type="hidden" name="form_action" value="" id="form_action"/>
+         <input type="hidden" name="val"  id="val"/>
+        <?= form_submit('performAction', 'performAction', 'id="action-form-submit"') ?>
+    </div>
+    <?= form_close() ?>
+<?php } ?>

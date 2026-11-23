@@ -1,0 +1,4 @@
+Name,Code,Brand,Category Code,Unit Code,Sale Unit Code, Purchase Unit Code,Cost,Price,Alert Quantity,Product Variants Separated by |,Subcategory Code,Weight,MRP,GST Rate,GST Code,Cess
+Product 11,2.83E+12,Guess,C1,pcs,pcs,pcs,90,100,20,LW Variant,,0.2,110,28,42034000,0
+Product 12,2.83E+12,B1,C1,pcs,pcs,pcs,90,100,20,,,1000,110,28,42034000,0
+Product 13,2.83E+12,LW Brand,C1,pcs,pcs,pcs,90,100,0,LW Variant,,0.01,110,28,42034000,0

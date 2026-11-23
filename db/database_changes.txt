@@ -1,0 +1,281 @@
+Database changes are done by logicowise team
+
+// Added mrp column in products table
+
+ALTER TABLE sma_products ADD mrp FLOAT(15,2) NOT NULL ;
+
+@ 24-07-17 by Dnyandev
+
+ALTER TABLE sma_products gst_rate FLOAT(5,2) NOT NULL, ADD gst_name TEXT NOT NULL , ADD gst_code VARCHAR(100) NOT NULL ;
+
+
+CREATE TABLE IF NOT EXISTS sma_gst_goods_rates (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  hsn_code varchar(100) NOT NULL,
+  hsn_code_4_digit varchar(10) NOT NULL,
+  name_of_commodity varchar(255) NOT NULL,
+  chapter_no varchar(5) NOT NULL,
+  sch varchar(5) NOT NULL,
+  gst_rate varchar(10) NOT NULL,
+  plain_hsn_code varchar(20) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+CREATE TABLE IF NOT EXISTS sma_gst_services_rates (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  section_code tinyint(4) NOT NULL,
+  section_name varchar(255) NOT NULL,
+  heading_code varchar(10) NOT NULL,
+  heading_name varchar(255) NOT NULL,
+  group_code varchar(10) NOT NULL,
+  group_name varchar(255) NOT NULL,
+  sac_code varchar(10) NOT NULL,
+  description text NOT NULL,
+  gst_rate varchar(10) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+ALTER TABLE  sma_sales ADD  total_weight FLOAT( 15, 2 ) NOT NULL ;
+
+//Add column total_mrp in sales table
+ALTER TABLE sma_sales ADD total_mrp FLOAT(15,4) NULL DEFAULT NULL AFTER total_weight;
+
+
+
+//State Add table
+
+CREATE TABLE sma_states (id int(11) NOT NULL,statename varchar(150) NOT NULL, tinnumber int(11) NOT NULL,  statecode varchar(150) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO sma_states VALUES (1,'Andaman and Nicobar Islands',35,'AN');
+INSERT INTO sma_states VALUES (2,'Andhra Pradesh',28,'AP');
+INSERT INTO sma_states VALUES (3,'Andhra Pradesh (New)',37,'AD');
+INSERT INTO sma_states VALUES (4,'Arunachal Pradesh',12,'AR');
+INSERT INTO sma_states VALUES (5,'Assam',18,'AS');
+INSERT INTO sma_states VALUES (6,'Bihar',10,'BH');
+INSERT INTO sma_states VALUES (7,'Chandigarh',4,'CH');
+INSERT INTO sma_states VALUES (8,'Chattisgarh',22,'CT');
+INSERT INTO sma_states VALUES (9,'Dadra and Nagar Haveli',26,'DN');
+INSERT INTO sma_states VALUES (10,'Daman and Diu',25,'DD');
+INSERT INTO sma_states VALUES (11,'Delhi',7,'DL');
+INSERT INTO sma_states VALUES (12,'Goa',30,'GA');
+INSERT INTO sma_states VALUES (13,'Gujarat',24,'GJ');
+INSERT INTO sma_states VALUES (14,'Haryana',6,'HR');
+INSERT INTO sma_states VALUES (15,'Himachal Pradesh',2,'HP');
+INSERT INTO sma_states VALUES (16,'Jammu and Kashmir',1,'JK');
+INSERT INTO sma_states VALUES (17,'Jharkhand',20,'JH');
+INSERT INTO sma_states VALUES (18,'Karnataka',29,'KA');
+INSERT INTO sma_states VALUES (19,'Kerala',32,'KL');
+INSERT INTO sma_states VALUES (20,'Lakshadweep Islands',31,'LD');
+INSERT INTO sma_states VALUES (21,'Madhya Pradesh',23,'MP');
+INSERT INTO sma_states VALUES (22,'Maharashtra',27,'MH');
+INSERT INTO sma_states VALUES (23,'Manipur',14,'MN');
+INSERT INTO sma_states VALUES (24,'Meghalaya',17,'ME');
+INSERT INTO sma_states VALUES (25,'Mizoram',15,'MI');
+INSERT INTO sma_states VALUES (26,'Nagaland',13,'NL');
+INSERT INTO sma_states VALUES (27,'Odisha',21,'OR');
+INSERT INTO sma_states VALUES (28,'Pondicherry',34,'PY');
+INSERT INTO sma_states VALUES (29,'Punjab',3,'PB');
+INSERT INTO sma_states VALUES (30,'Rajasthan',8,'RJ');
+INSERT INTO sma_states VALUES (31,'Sikkim',11,'SK');
+INSERT INTO sma_states VALUES (32,'Tamil Nadu',33,'TN');
+INSERT INTO sma_states VALUES (33,'Telangana',36,'TS');
+INSERT INTO sma_states VALUES (34,'Tripura',16,'TR');
+INSERT INTO sma_states VALUES (35,'Uttar Pradesh',9,'UP');
+INSERT INTO sma_states VALUES (36,'Uttarakhand',5,'UT');
+INSERT INTO sma_states VALUES (37,'West Bengal',19,'WB');
+
+
+//state filed in system setting
+ state
+ALTER TABLE sma_settings ADD state INT NOT NULL ;
+
+ //sma_sale_items table add cgst,sgst rate
+ ALTER TABLE sma_sale_items ADD cgst_rate FLOAT(5,2) NOT NULL AFTER comment, ADD sgst_rate FLOAT(5,2) NOT NULL AFTER cgst_rate;
+//sma_sale_items table add gst_code
+ALTER TABLE sma_sale_items ADD gst_code VARCHAR(100) NOT NULL AFTER sgst_rate;
+
+// add column purchase_items
+ALTER TABLE sma_purchase_items ADD gst_code varchar(100) NOT NULL AFTER unit_quantity ,ADD cgst_rate FLOAT(5,2) NULL DEFAULT '0.00' AFTER gst_code, ADD sgst_rate FLOAT(5,2) NULL DEFAULT '0.00' AFTER cgst_rate, ADD igst_rate FLOAT(5,2) NULL AFTER sgst_rate
+
+RENAME TABLE sma_state TO sma_states;
+
+ALTER TABLE sma_purchase_items ADD cgst_amt FLOAT(15,2) NULL DEFAULT '0' , ADD sgst_amt FLOAT(15,2) NULL DEFAULT '0' , ADD igst_amt FLOAT(15,2) NULL DEFAULT '0.00' ;
+
+
+ALTER TABLE `sma_sale_items` ADD `igst_rate` FLOAT(5,2) NULL DEFAULT '0' , ADD `cgst_amt` FLOAT(15,2) NULL DEFAULT '0' , ADD `sgst_amt` FLOAT(15,2) NULL DEFAULT '0' , ADD `igst_amt` FLOAT(15,2) NULL DEFAULT '0' ;
+
+ALTER TABLE `sma_companies` ADD `father_name` VARCHAR(1000) NOT NULL ;
+
+
+ALTER TABLE `sma_companies` ADD `house_no` VARCHAR(1000) NOT NULL AFTER `father_name`;
+ALTER TABLE `sma_companies` ADD `occupation` VARCHAR(1000) NOT NULL AFTER `house_no`;
+ALTER TABLE `sma_companies` ADD `religion` VARCHAR(1000) NOT NULL AFTER `occupation`;
+ALTER TABLE `sma_companies` ADD `locality` VARCHAR(1000) NOT NULL AFTER `religion`;
+
+ALTER TABLE `sma_companies` ADD `certificate_no` VARCHAR(1000) NOT NULL AFTER `locality`, ADD `distinctive_no` VARCHAR(1000) NOT NULL AFTER `certificate_no`, ADD `recieved_rs` VARCHAR(1000) NOT NULL AFTER `distinctive_no`, ADD `no_of_share` VARCHAR(1000) NOT NULL AFTER `recieved_rs`;
+
+
+ALTER TABLE `sma_companies` ADD `date_of_birth` VARCHAR(1000) NOT NULL AFTER `no_of_share`;
+ALTER TABLE `sma_companies` ADD `gender` VARCHAR(1000) NOT NULL AFTER `date_of_birth`;
+
+
+ALTER TABLE `sma_quote_items` ADD `cgst_rate` FLOAT(5,2) NOT NULL AFTER `unit_quantity`, ADD `sgst_rate` FLOAT(5,2) NOT NULL AFTER `cgst_rate`, ADD `gst_code` VARCHAR(100) NOT NULL AFTER `sgst_rate`, ADD `igst_rate` FLOAT(5,2) NOT NULL AFTER `gst_code`, ADD `cgst_amt` FLOAT(15,2) NOT NULL AFTER `igst_rate`, ADD `sgst_amt` FLOAT(15,2) NOT NULL AFTER `cgst_amt`, ADD `igst_amt` FLOAT(15,2) NOT NULL AFTER `sgst_amt`;
+
+
+ALTER TABLE `sma_suspended_items` ADD `cgst_rate` FLOAT(5,2) NOT NULL AFTER `comment`, ADD `sgst_rate` FLOAT(5,2) NOT NULL AFTER `cgst_rate`, ADD `gst_code` VARCHAR(100) NOT NULL AFTER `sgst_rate`, ADD `igst_rate` FLOAT(5,2) NOT NULL AFTER `gst_code`, ADD `cgst_amt` FLOAT(15,2) NOT NULL AFTER `igst_rate`, ADD `sgst_amt` FLOAT(15,2) NOT NULL AFTER `cgst_amt`, ADD `igst_amt` FLOAT(15,2) NOT NULL AFTER `sgst_amt`;
+
+ALTER TABLE `sma_products` ADD `cess` DECIMAL(15,2) NOT NULL AFTER `gst_code`;
+ALTER TABLE `sma_products` CHANGE `cess` `cess` DECIMAL(15,2) NULL DEFAULT '0.00';
+
+ALTER TABLE `sma_purchase_items` ADD `cess_rate` FLOAT(5,2) NOT NULL AFTER `igst_amt`, ADD `cess_amt` FLOAT(15,2) NOT NULL AFTER `cess_rate`;
+
+ALTER TABLE `sma_sale_items` ADD `cess_rate` FLOAT(5,2) NULL DEFAULT '0.00' AFTER `igst_amt`, ADD `cess_amt` FLOAT(15,2) NULL DEFAULT '0.00' AFTER `cess_rate`;
+
+ALTER TABLE `sma_products` CHANGE `cess` `cess` DECIMAL(15,2) NOT NULL DEFAULT '0.00';
+
+ALTER TABLE `sma_quote_items` CHANGE `cgst_rate` `cgst_rate` FLOAT(5,2) NULL DEFAULT '0.00';
+ALTER TABLE `sma_quote_items` CHANGE `sgst_rate` `sgst_rate` FLOAT(5,2) NULL DEFAULT '0.00';
+ALTER TABLE `sma_quote_items` CHANGE `igst_rate` `igst_rate` FLOAT(5,2) NULL DEFAULT '0.00';
+ALTER TABLE `sma_quote_items` CHANGE `cgst_amt` `cgst_amt` FLOAT(15,2) NULL DEFAULT '0.00';
+ALTER TABLE `sma_quote_items` CHANGE `sgst_amt` `sgst_amt` FLOAT(15,2) NULL DEFAULT '0.00';
+ALTER TABLE `sma_quote_items` CHANGE `igst_amt` `igst_amt` FLOAT(15,2) NULL DEFAULT '0.00';
+
+
+//16/3/2019
+
+DROP TABLE IF EXISTS `sma_internal_purchases`;
+CREATE TABLE IF NOT EXISTS `sma_internal_purchases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reference_no` varchar(55) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `brand_id` int(11) NOT NULL,
+  `brand` varchar(55) NOT NULL,
+  `branch_code` varchar(55) NOT NULL,
+  `note` varchar(1000) NOT NULL,
+  `total` decimal(25,4) DEFAULT NULL,
+  `product_discount` decimal(25,4) DEFAULT NULL,
+  `order_discount_id` varchar(20) DEFAULT NULL,
+  `order_discount` decimal(25,4) DEFAULT NULL,
+  `total_discount` decimal(25,4) DEFAULT NULL,
+  `product_tax` decimal(25,4) DEFAULT NULL,
+  `order_tax_id` int(11) DEFAULT NULL,
+  `order_tax` decimal(25,4) DEFAULT NULL,
+  `total_tax` decimal(25,4) DEFAULT '0.0000',
+  `shipping` decimal(25,4) DEFAULT '0.0000',
+  `grand_total` decimal(25,4) NOT NULL,
+  `paid` decimal(25,4) NOT NULL DEFAULT '0.0000',
+  `status` varchar(55) DEFAULT '',
+  `payment_status` varchar(20) DEFAULT 'pending',
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `attachment` varchar(55) DEFAULT NULL,
+  `payment_term` tinyint(4) DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `return_id` int(11) DEFAULT NULL,
+  `surcharge` decimal(25,4) NOT NULL DEFAULT '0.0000',
+  `return_purchase_ref` varchar(55) DEFAULT NULL,
+  `purchase_id` int(11) DEFAULT NULL,
+  `return_purchase_total` decimal(25,4) NOT NULL DEFAULT '0.0000',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `sma_internal_purchase_items`;
+CREATE TABLE IF NOT EXISTS `sma_internal_purchase_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchase_id` int(11) DEFAULT NULL,
+  `transfer_id` int(11) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_code` varchar(50) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `option_id` int(11) DEFAULT NULL,
+  `net_unit_cost` decimal(25,4) NOT NULL,
+  `quantity` decimal(15,4) NOT NULL,
+  `branch_code` varchar(55) NOT NULL,
+  `item_tax` decimal(25,4) DEFAULT NULL,
+  `tax_rate_id` int(11) DEFAULT NULL,
+  `tax` varchar(20) DEFAULT NULL,
+  `discount` varchar(20) DEFAULT NULL,
+  `item_discount` decimal(25,4) DEFAULT NULL,
+  `expiry` date DEFAULT NULL,
+  `subtotal` decimal(25,4) NOT NULL,
+  `quantity_balance` decimal(15,4) DEFAULT '0.0000',
+  `date` date NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `unit_cost` decimal(25,4) DEFAULT NULL,
+  `real_unit_cost` decimal(25,4) DEFAULT NULL,
+  `quantity_received` decimal(15,4) DEFAULT NULL,
+  `supplier_part_no` varchar(50) DEFAULT NULL,
+  `purchase_item_id` int(11) DEFAULT NULL,
+  `product_unit_id` int(11) DEFAULT NULL,
+  `product_unit_code` varchar(10) DEFAULT NULL,
+  `unit_quantity` decimal(15,4) NOT NULL,
+  `gst_code` varchar(100) DEFAULT NULL,
+  `cgst_rate` float(5,2) DEFAULT '0.00',
+  `sgst_rate` float(5,2) DEFAULT '0.00',
+  `igst_rate` float(5,2) DEFAULT '0.00',
+  `cgst_amt` float(15,2) DEFAULT '0.00',
+  `sgst_amt` float(15,2) DEFAULT '0.00',
+  `igst_amt` float(15,2) DEFAULT '0.00',
+  `cess_rate` float(5,2) NOT NULL,
+  `cess_amt` float(15,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `purchase_id` (`purchase_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+//22/3/2019
+//For internal store purchase table
+ALTER TABLE `sma_purchases` ADD `ipo_reference_no` VARCHAR(55) NULL AFTER `return_purchase_total`;
+
+
+//26/3/2019
+
+
+ALTER TABLE `sma_settings` ADD `ipr_prefix` VARCHAR(10) NOT NULL DEFAULT 'IPR' COMMENT ' internal store purchase prefix' AFTER `iso_prefix`;
+
+ALTER TABLE `sma_order_ref` ADD `ipr` INT(11) NOT NULL DEFAULT '1' AFTER `iso`;
+
+
+ALTER TABLE `sma_settings` ADD `branch_code` VARCHAR(50) NULL DEFAULT NULL ;
+
+//12/4/2019
+ALTER TABLE `sma_products` ADD `marathi_name` VARCHAR(255) NULL AFTER `reordered_quantity`;
+
+ALTER TABLE `sma_permissions` ADD `internal_purchases-index` TINYINT NOT NULL DEFAULT '0' , ADD `internal_purchases-add` TINYINT NOT NULL DEFAULT '0' ;
+
+#23-08-2020
+ALTER TABLE `sma_pos_register` ADD `total_online_payment_submitted` FLOAT(15,2) NOT NULL, ADD `total_phonepe_submitted` FLOAT(15,2) NOT NULL AFTER `total_online_payment_submitted`;
+
+
+
+//2/2/2023
+ALTER TABLE `sma_pos_register` ADD `total_gc` FLOAT(15,2) NOT NULL AFTER `total_cc_amount`, ADD `total_sales` FLOAT(15,2) NOT NULL AFTER `total_gc`, ADD `total_refunds` FLOAT(15,2) NOT NULL AFTER `total_sales`, ADD `total_expenses` FLOAT(15,2) NOT NULL AFTER `total_refunds`;
+
+
+
+
+//22/11/2025
+ALTER TABLE `sma_purchase_items` ADD COLUMN `debit_note_id` INT(11) DEFAULT 0 NULL AFTER `cess_amt`; 
+
+ALTER TABLE  `sma_purchase_items` ADD COLUMN `created_by` INT(11) DEFAULT 0 NULL AFTER `debit_note_id`; 
+
+
+ ALTER TABLE `sma_debit` ADD COLUMN `warehouse_id` INT(10) DEFAULT 0 NULL AFTER `payment_status`, ADD COLUMN `product_discount` DECIMAL(25,4) DEFAULT 0 NULL AFTER `warehouse_id`, ADD COLUMN `order_discount_id` INT(11) DEFAULT 0 NULL AFTER `product_discount`, ADD COLUMN `order_discount` DECIMAL(25,4) DEFAULT 0 NULL AFTER `order_discount_id`, ADD COLUMN `total_discount` DECIMAL(25,4) DEFAULT 0 NULL AFTER `order_discount`, ADD COLUMN `product_tax` DECIMAL(25,4) DEFAULT 0 NULL AFTER `total_discount`, ADD COLUMN `order_tax_id` INT(11) DEFAULT 0 NULL AFTER `product_tax`, ADD COLUMN `order_tax` DECIMAL(25,4) DEFAULT 0 NULL AFTER `order_tax_id`, ADD COLUMN `total_tax` DECIMAL(25,4) DEFAULT 0 NULL AFTER `order_tax`, ADD COLUMN `shipping` DECIMAL(25,4) DEFAULT 0 NULL AFTER `total_tax`, ADD COLUMN `grand_total` DECIMAL(25,4) NULL AFTER `shipping`, ADD COLUMN `status` VARCHAR(50) NULL AFTER `grand_total`, ADD COLUMN `created_by` INT(11) DEFAULT 0 NULL AFTER `status`, ADD COLUMN `payment_term` VARCHAR(50) NULL AFTER `created_by`, ADD COLUMN `due_date` VARCHAR(50) NULL AFTER `payment_term`; 
+
+
+ ALTER TABLE `sma_debit` ADD COLUMN `date` timestamp NULL AFTER `due_date`; 
+
+
+ALTER TABLE  `sma_debit` ADD COLUMN `paid` DECIMAL(25,4) DEFAULT 0 NULL AFTER `date`; 
+
+
+ALTER TABLE  `sma_debit` ADD COLUMN `updated_by` INT(11) DEFAULT 0 NULL AFTER `created_by`; 
+
+
+ALTER TABLE `sma_payments` ADD COLUMN `debit_note_id` INT(11) DEFAULT 0 NULL AFTER `transaction_number`; 
