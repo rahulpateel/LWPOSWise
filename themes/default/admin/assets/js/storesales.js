@@ -1186,7 +1186,7 @@ function loadItems() {
             total += formatDecimal(((parseFloat(item_price) + parseFloat(pr_tax_val)) * parseFloat(item_qty)), 4);
             count += parseFloat(item_qty);
             an++;
-
+            console.log("item_aqty " +item_aqty);
             if (item_type == 'standard' && item.options !== false) {
                 $.each(item.options, function () {
                     if(this.id == item_option && base_quantity > this.quantity) {

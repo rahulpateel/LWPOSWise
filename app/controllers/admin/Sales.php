@@ -1431,7 +1431,7 @@ class Sales extends MY_Controller
                 $pis = $this->site->getPurchasedItems($item->product_id, $item->warehouse_id, $item->option_id);
                 if ($pis) {
                     foreach ($pis as $pi) {
-                        $row->quantity += $pi->quantity_balance;
+                      //  $row->quantity += $pi->quantity_balance;
                     }
                 }
                 $row->id = $item->product_id;

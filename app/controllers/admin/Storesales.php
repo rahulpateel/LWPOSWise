@@ -1308,6 +1308,7 @@ class Storesales extends MY_Controller
                        // $row->quantity += $pi->quantity_balance;
                     }
                 }
+
                 $row->id = $item->product_id;
                 $row->code = $item->product_code;
                 $row->name = $item->product_name;
@@ -1318,6 +1319,7 @@ class Storesales extends MY_Controller
                 $row->unit = $item->product_unit_id;
                 $row->qty = $item->unit_quantity;
                 $row->quantity += $item->quantity;
+                 $row->stock=$row->quantity ;
                 $row->discount = $item->discount ? $item->discount : '0';
                 $row->price = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($item->item_discount / $item->quantity));
                 $row->unit_price = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($item->item_discount / $item->quantity) + $this->sma->formatDecimal($item->item_tax / $item->quantity) : $item->unit_price + ($item->item_discount / $item->quantity);

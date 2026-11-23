@@ -339,27 +339,12 @@
                                         </a>
                                     </li>
 
-                                <li id="products_stks">
-                                        <a class="submenu" href="<?= admin_url('products/stks'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('stock_takes'); ?></span>
-                                        </a>
-                                    </li>
+                              
 									
-									<li id="products_stks">
-                                        <a class="submenu" href="<?= admin_url('products/stks/1'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('recheck_stock_takes'); ?></span>
-                                        </a>
-                                    </li>
+									
 									
 
-                                     <li id="products_stocktake">
-                                        <a class="submenu" href="<?= admin_url('products/stocktake'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('stocktake'); ?></span>
-                                        </a>
-                                    </li>
+                                  
 
 
 								 <li id="products_setmrp">
@@ -422,18 +407,9 @@
 															<span class="text"> <?= lang('print_signages'); ?></span>
 														</a>
 													</li>
-                                    <li id="products_quantity_adjustments">
-                                        <a class="submenu" href="<?= admin_url('products/quantity_adjustments'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('quantity_adjustments'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li id="products_add_adjustment">
-                                        <a class="submenu" href="<?= admin_url('products/add_adjustment'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('add_adjustment'); ?></span>
-                                        </a>
-                                    </li>
+
+
+                                    
                                     <li id="products_stock_upload">
                                         <a class="submenu" href="<?= admin_url('products/stock_upload'); ?>">
                                             <i class="fa fa-file-excel-o"></i>
@@ -1239,17 +1215,8 @@
 
 													<?php } ?>
                                     <?php if ($GP['products-adjustments']) { ?>
-                                    <li id="products_quantity_adjustments">
-                                        <a class="submenu" href="<?= admin_url('products/quantity_adjustments'); ?>">
-                                            <i class="fa fa-filter"></i><span class="text"> <?= lang('quantity_adjustments'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li id="products_add_adjustment">
-                                        <a class="submenu" href="<?= admin_url('products/add_adjustment'); ?>">
-                                            <i class="fa fa-filter"></i>
-                                            <span class="text"> <?= lang('add_adjustment'); ?></span>
-                                        </a>
-                                    </li>
+                                  
+                                   
                                     <li id="products_stock_upload">
                                         <a class="submenu" href="<?= admin_url('products/stock_upload'); ?>">
                                             <i class="fa fa-file-excel-o"></i>
